@@ -15,8 +15,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import axios from 'axios';
-let curResponse = require('./curResponse.json')
-let potResponse = require('./potResponse.json')
+// let curResponse = require('./curResponse.json')
+// let potResponse = require('./potResponse.json')
 
 function Copyright() {
   return (
@@ -70,23 +70,30 @@ export default function Album() {
   const classes = useStyles();
   const [showCur, showCurReads] = useState(false)
   const [showPot, showPotReads] = useState(false)
-  const [curCards, setCards] = useState(curResponse.items);
-  const [potCards, setPotCards] = useState(potResponse.items);
+  const [curCards, setCurCards] = useState([]);
+  const [potCards, setPotCards] = useState([]);
   // Hard Code for now
   //setCards(testResponse.items)
+
+  function axiosReq(shelfNum, changeFunc) {
+    let reqStr = "https://www.googleapis.com/books/v1/users/114611137080236628052/bookshelves/" + shelfNum + "/volumes"
+    
+    //Axios is a client used to make http requests & retrieve respsonses
+    axios
+    //crossdomain true to bypass CORS
+    .get(reqStr, {crossdomain: true})
+    .then(res => {
+        changeFunc(res.data.items)
+    })
+    .catch(err => {
+        console.log(err.response)
+    })
+  }
   
-//   //let reqStr = "https://www.googleapis.com/books/v1/user/" + userID + "/bookshelves/" + elmBCID + "/volumes?key=" + apiKey
-//   let reqStr2 = "https://www.googleapis.com/books/v1/users/114611137080236628052/bookshelves/1001/volumes"
-//   //Axios is a client used to make http requests & retrieve respsonses
-//   axios
-//   //crossdomain true to bypass CORS
-//   .get(reqStr2, {crossdomain: true})
-//   .then(res => {
-//       setCards(res.data.items)
-//   })
-//   .catch(err => {
-//       console.log(err.response)
-//   })
+  // Assign reads arrays with Google API Request
+  axiosReq("1001", setCurCards)
+  axiosReq("1002", setPotCards)
+  
 
   return (
     <React.Fragment>
@@ -130,7 +137,7 @@ export default function Album() {
             {showCur ? <Container className={classes.cardGrid} maxWidth="md">
             {/* End hero unit */}
             <h2><u>Completed Reads:</u></h2>
-            <h4>Total Pages: {curCards.reduce((total, current) => total = total + current.volumeInfo.pageCount, 0)}</h4>
+            <h4>Total Books: {curCards.length}  |  Total Pages: {curCards.reduce((total, current) => total = total + current.volumeInfo.pageCount, 0)}</h4>
             <Grid container spacing={4}>
                 {curCards.map((book) => (
                 <Grid item key={book.volumeInfo.title} xs={12} sm={6} md={4}>
@@ -166,7 +173,7 @@ export default function Album() {
             {showPot ? <Container className={classes.cardGrid} maxWidth="md">
             {/* End hero unit */}
             <h2><u>Potential Reads:</u></h2>
-            <h4>Total Pages: {potCards.reduce((total, current) => total = total + current.volumeInfo.pageCount, 0)}</h4>
+            <h4>Total Books: {potCards.length}  |  Total Pages: {potCards.reduce((total, current) => total = total + current.volumeInfo.pageCount, 0)}</h4>
             <Grid container spacing={4}>
                 {potCards.map((book) => (
                 <Grid item key={book.volumeInfo.title} xs={12} sm={6} md={4}>

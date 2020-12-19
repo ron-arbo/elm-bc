@@ -22,7 +22,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Secrets
+# Secrets/Mine
 src/secrets.json
 src/curResponse.json
 src/potResponse.json
+src/client_secret.json
+src/backend/node_modules/
