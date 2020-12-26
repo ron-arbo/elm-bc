@@ -12,7 +12,9 @@ const PostSchema = mongoose.Schema({
         required: false
     },
     thumbnail: String,
-    readers: [String]
+    readers: [String],
+    // Can be either completed, current, or potential
+    type: String
 })
 
 // Can also do this format above:

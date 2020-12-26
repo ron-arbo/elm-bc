@@ -17,9 +17,6 @@ import Link from '@material-ui/core/Link';
 import axios from 'axios';
 let secrets = require('./secrets.json')
 let clientSecrets = require('./client_secret.json')
-// let dbOps = require('./mongoDB')
-// let curResponse = require('./curResponse.json')
-// let potResponse = require('./potResponse.json')
 
 function Copyright() {
   return (
@@ -71,20 +68,20 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Album() {
   const classes = useStyles();
-  const [showCur, showCurReads] = useState(false)
+  const [showComp, showCompReads] = useState(false)
   const [showPot, showPotReads] = useState(false)
-  const [curCards, setCurCards] = useState([]);
+  const [compCards, setCompCards] = useState([]);
   const [potCards, setPotCards] = useState([]);
-  // Hard Code for now
-  //setCards(testResponse.items)
-  
-  let curReq = "https://www.googleapis.com/books/v1/users/" + secrets.userID + "/bookshelves/" + secrets.curElmBCID + "/volumes"
-  let potReq = "https://www.googleapis.com/books/v1/users/" + secrets.userID + "/bookshelves/" + secrets.potElmBCID + "/volumes"
-  
-  // Make DB query to get data (Only functioning for current as of now)
-  axios.get("/posts").then(res => {
-    setCurCards(res.data)
+
+  // **NOTE** I think these are not done right. The requests work, but they may be occuring repeatedly rather than just once
+  // Make DB query to get data (Only functioning for comprent as of now)
+  axios.get("/posts/compBooks").then(res => {
+    setCompCards(res.data)
   })
+  axios.get("/posts/potBooks").then(res => {
+    setPotCards(res.data)
+  })
+
 
   return (
     <React.Fragment>
@@ -110,7 +107,7 @@ export default function Album() {
             <div className={classes.heroButtons}>
               <Grid container spacing={2} justify="center">
                 <Grid item>
-                  <Button variant="contained" color="primary" onClick={() => showCurReads(!showCur)}>
+                  <Button variant="contained" color="primary" onClick={() => showCompReads(!showComp)}>
                     Completed Reads
                   </Button>
                 </Grid>
@@ -125,12 +122,12 @@ export default function Album() {
         </div>
 
         <div id="books">
-            {showCur ? <Container className={classes.cardGrid} maxWidth="md">
+            {showComp ? <Container className={classes.cardGrid} maxWidth="md">
             {/* End hero unit */}
             <h2><u>Completed Reads:</u></h2>
-            <h4>Total Books: {curCards.length}  |  Total Pages: {curCards.reduce((total, current) => total = total + current.pageCount, 0)}</h4>
+            <h4>Total Books: {compCards.length}  |  Total Pages: {compCards.reduce((total, current) => total = total + current.pageCount, 0)}</h4>
             <Grid container spacing={4}>
-                {curCards.map((book) => (
+                {compCards.map((book) => (
                 <Grid item key={book.title} xs={12} sm={6} md={4}>
                     <Card className={classes.card}>
                     <CardMedia
@@ -168,32 +165,32 @@ export default function Album() {
             {showPot ? <Container className={classes.cardGrid} maxWidth="md">
             {/* End hero unit */}
             <h2><u>Potential Reads:</u></h2>
-            <h4>Total Books: {potCards.length}  |  Total Pages: {potCards.reduce((total, current) => total = total + current.volumeInfo.pageCount, 0)}</h4>
+            <h4>Total Books: {potCards.length}  |  Total Pages: {potCards.reduce((total, current) => total = total + current.pageCount, 0)}</h4>
             <Grid container spacing={4}>
                 {potCards.map((book) => (
-                <Grid item key={book.volumeInfo.title} xs={12} sm={6} md={4}>
+                <Grid item key={book.title} xs={12} sm={6} md={4}>
                     <Card className={classes.card}>
                     <CardMedia
                         className={classes.cardMedia}
-                        image={book.volumeInfo.imageLinks.thumbnail}
+                        image={book.thumbnail}
                         title="Image title"
                     />
                     <CardContent className={classes.cardContent}>
                         <Typography gutterBottom variant="h5" component="h2">
-                            <a style={{ color: '#000000' }} href={book.volumeInfo.infoLink}>{book.volumeInfo.title}</a>
+                            <a style={{ color: '#000000' }} href={book.infoLink}>{book.title}</a>
                         </Typography>
                         <Typography gutterBottom variant="h6" component="h2">
-                            {book.volumeInfo.authors.toString()}
+                            {book.authors.toString()}
                         </Typography>
                         <Typography>
-                            {book.volumeInfo.description}
+                            {book.description}
                         </Typography>
                     </CardContent>
                     <CardActions>
-                        <Button size="small" color="primary" href={book.volumeInfo.infoLink}>
+                        <Button size="small" color="primary" href={book.infoLink}>
                         Details
                         </Button>
-                        <Button size="small" color="primary" href={book.volumeInfo.infoLink}>
+                        <Button size="small" color="primary" href={book.infoLink}>
                         Remove
                         </Button>
                     </CardActions>

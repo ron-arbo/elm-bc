@@ -3,10 +3,21 @@ const express = require('express')
 const router = express.Router()
 const Post = require('../models/Post')
 
-// Returns all posts in DB
-router.get('/', async (req, res) => {
+// Returns all current books in DB
+router.get('/compBooks', async (req, res) => {
     try {
-        const posts = await Post.find()
+        const posts = await Post.find({ type: "completed" })
+        res.json(posts)
+    }
+    catch(err) {
+        res.json({message: err})
+    }
+})
+
+// Returns all potential books in DB
+router.get('/potBooks', async (req, res) => {
+    try {
+        const posts = await Post.find({ type: "potential" })
         res.json(posts)
     }
     catch(err) {
@@ -25,7 +36,9 @@ router.post('/', async (req, res) => {
         previewLink: req.body.previewLink,
         infoLink: req.body.infoLink,
         price: req.body.price,
-        thumbnail: req.body.thumbnail
+        thumbnail: req.body.thumbnail,
+        readers: req.body.readers,
+        type: req.body.type
     })
 
     try {
