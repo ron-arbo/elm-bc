@@ -2,12 +2,17 @@ const mongoose = require('mongoose')
 
 const PostSchema = mongoose.Schema({
     title: String,
-    authors: String,
+    authors: [String],
     description: String,
     pageCount: Number,
     previewLink: String,
     infoLink: String,
-    price: Number
+    price: {
+        type: Number,
+        required: false
+    },
+    thumbnail: String,
+    readers: [String]
 })
 
 // Can also do this format above:

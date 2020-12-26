@@ -34,37 +34,6 @@ function Copyright() {
   );
 }
 
-function axiosReq(reqStr, changeFunc) {
-    //Axios is a client used to make http requests & retrieve respsonses
-    axios
-    //crossdomain true to bypass CORS
-    .get(reqStr, {crossdomain: true})
-    .then(res => {
-        changeFunc(res.data.items)
-    })
-    .catch(err => {
-        console.log(err.response)
-    })
-}
-
-// function removeBook(shelfID, volumeID) {
-//   var postData = {
-//     client_id: clientSecrets.web.client_id,
-//     redirect_uri: clientSecrets.web.redirect_uris[0],
-//     response_type: code,
-//     scope: ,
-//     access_type: online
-//   };
-  
-//   axios.post('http://<host>:<port>/<path>', postData, axiosConfig)
-//   .then((res) => {
-//     console.log("RESPONSE RECEIVED: ", res);
-//   })
-//   .catch((err) => {
-//     console.log("AXIOS ERROR: ", err);
-//   })
-// }
-
 const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: theme.spacing(2),
@@ -112,9 +81,10 @@ export default function Album() {
   let curReq = "https://www.googleapis.com/books/v1/users/" + secrets.userID + "/bookshelves/" + secrets.curElmBCID + "/volumes"
   let potReq = "https://www.googleapis.com/books/v1/users/" + secrets.userID + "/bookshelves/" + secrets.potElmBCID + "/volumes"
   
-  // Make API requests to get data
-  axiosReq(curReq, setCurCards)
-  axiosReq(potReq, setPotCards)
+  // Make DB query to get data (Only functioning for current as of now)
+  axios.get("/posts").then(res => {
+    setCurCards(res.data)
+  })
 
   return (
     <React.Fragment>
@@ -158,32 +128,33 @@ export default function Album() {
             {showCur ? <Container className={classes.cardGrid} maxWidth="md">
             {/* End hero unit */}
             <h2><u>Completed Reads:</u></h2>
-            <h4>Total Books: {curCards.length}  |  Total Pages: {curCards.reduce((total, current) => total = total + current.volumeInfo.pageCount, 0)}</h4>
+            <h4>Total Books: {curCards.length}  |  Total Pages: {curCards.reduce((total, current) => total = total + current.pageCount, 0)}</h4>
             <Grid container spacing={4}>
                 {curCards.map((book) => (
-                <Grid item key={book.volumeInfo.title} xs={12} sm={6} md={4}>
+                <Grid item key={book.title} xs={12} sm={6} md={4}>
                     <Card className={classes.card}>
                     <CardMedia
                         className={classes.cardMedia}
-                        image={book.volumeInfo.imageLinks.thumbnail}
+                        // Hardcode temp
+                        image={book.thumbnail}
                         title="Image title"
                     />
                     <CardContent className={classes.cardContent}>
                         <Typography gutterBottom variant="h5" component="h2">
-                            <a style={{ color: '#000000' }} href={book.volumeInfo.infoLink}>{book.volumeInfo.title}</a>
+                            <a style={{ color: '#000000' }} href={book.infoLink}>{book.title}</a>
                         </Typography>
                         <Typography gutterBottom variant="h6" component="h2">
-                            {book.volumeInfo.authors.toString()}
+                            {book.authors.toString()}
                         </Typography>
                         <Typography>
-                            {book.volumeInfo.description}
+                            {book.description}
                         </Typography>
                     </CardContent>
                     <CardActions>
-                        <Button size="small" color="primary" target="_blank" href={book.volumeInfo.infoLink}>
-                         View
+                        <Button size="small" color="primary" target="_blank" href={book.infoLink}>
+                         Details
                         </Button>
-                        <Button size="small" color="primary" target="_blank" href={book.volumeInfo.infoLink}>
+                        <Button size="small" color="primary" target="_blank" href={book.infoLink}>
                          Remove
                         </Button>
                     </CardActions>
@@ -220,7 +191,7 @@ export default function Album() {
                     </CardContent>
                     <CardActions>
                         <Button size="small" color="primary" href={book.volumeInfo.infoLink}>
-                        View
+                        Details
                         </Button>
                         <Button size="small" color="primary" href={book.volumeInfo.infoLink}>
                         Remove

@@ -24,7 +24,8 @@ router.post('/', async (req, res) => {
         pageCount: req.body.pageCount,
         previewLink: req.body.previewLink,
         infoLink: req.body.infoLink,
-        price: req.body.price
+        price: req.body.price,
+        thumbnail: req.body.thumbnail
     })
 
     try {
