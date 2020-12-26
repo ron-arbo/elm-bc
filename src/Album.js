@@ -15,6 +15,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import axios from 'axios';
+let secrets = require('./secrets.json')
+let clientSecrets = require('./client_secret.json')
+// let dbOps = require('./mongoDB')
 // let curResponse = require('./curResponse.json')
 // let potResponse = require('./potResponse.json')
 
@@ -30,6 +33,37 @@ function Copyright() {
     </Typography>
   );
 }
+
+function axiosReq(reqStr, changeFunc) {
+    //Axios is a client used to make http requests & retrieve respsonses
+    axios
+    //crossdomain true to bypass CORS
+    .get(reqStr, {crossdomain: true})
+    .then(res => {
+        changeFunc(res.data.items)
+    })
+    .catch(err => {
+        console.log(err.response)
+    })
+}
+
+// function removeBook(shelfID, volumeID) {
+//   var postData = {
+//     client_id: clientSecrets.web.client_id,
+//     redirect_uri: clientSecrets.web.redirect_uris[0],
+//     response_type: code,
+//     scope: ,
+//     access_type: online
+//   };
+  
+//   axios.post('http://<host>:<port>/<path>', postData, axiosConfig)
+//   .then((res) => {
+//     console.log("RESPONSE RECEIVED: ", res);
+//   })
+//   .catch((err) => {
+//     console.log("AXIOS ERROR: ", err);
+//   })
+// }
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -74,26 +108,13 @@ export default function Album() {
   const [potCards, setPotCards] = useState([]);
   // Hard Code for now
   //setCards(testResponse.items)
-
-  function axiosReq(shelfNum, changeFunc) {
-    let reqStr = "https://www.googleapis.com/books/v1/users/114611137080236628052/bookshelves/" + shelfNum + "/volumes"
-    
-    //Axios is a client used to make http requests & retrieve respsonses
-    axios
-    //crossdomain true to bypass CORS
-    .get(reqStr, {crossdomain: true})
-    .then(res => {
-        changeFunc(res.data.items)
-    })
-    .catch(err => {
-        console.log(err.response)
-    })
-  }
   
-  // Assign reads arrays with Google API Request
-  axiosReq("1001", setCurCards)
-  axiosReq("1002", setPotCards)
+  let curReq = "https://www.googleapis.com/books/v1/users/" + secrets.userID + "/bookshelves/" + secrets.curElmBCID + "/volumes"
+  let potReq = "https://www.googleapis.com/books/v1/users/" + secrets.userID + "/bookshelves/" + secrets.potElmBCID + "/volumes"
   
+  // Make API requests to get data
+  axiosReq(curReq, setCurCards)
+  axiosReq(potReq, setPotCards)
 
   return (
     <React.Fragment>
@@ -152,7 +173,7 @@ export default function Album() {
                             <a style={{ color: '#000000' }} href={book.volumeInfo.infoLink}>{book.volumeInfo.title}</a>
                         </Typography>
                         <Typography gutterBottom variant="h6" component="h2">
-                            {book.volumeInfo.authors}
+                            {book.volumeInfo.authors.toString()}
                         </Typography>
                         <Typography>
                             {book.volumeInfo.description}
@@ -161,6 +182,9 @@ export default function Album() {
                     <CardActions>
                         <Button size="small" color="primary" target="_blank" href={book.volumeInfo.infoLink}>
                          View
+                        </Button>
+                        <Button size="small" color="primary" target="_blank" href={book.volumeInfo.infoLink}>
+                         Remove
                         </Button>
                     </CardActions>
                     </Card>
@@ -188,15 +212,18 @@ export default function Album() {
                             <a style={{ color: '#000000' }} href={book.volumeInfo.infoLink}>{book.volumeInfo.title}</a>
                         </Typography>
                         <Typography gutterBottom variant="h6" component="h2">
-                            {book.volumeInfo.authors}
+                            {book.volumeInfo.authors.toString()}
                         </Typography>
                         <Typography>
                             {book.volumeInfo.description}
                         </Typography>
                     </CardContent>
                     <CardActions>
-                        <Button size="small" color="primary" href={book.infoLink}>
+                        <Button size="small" color="primary" href={book.volumeInfo.infoLink}>
                         View
+                        </Button>
+                        <Button size="small" color="primary" href={book.volumeInfo.infoLink}>
+                        Remove
                         </Button>
                     </CardActions>
                     </Card>
@@ -210,10 +237,7 @@ export default function Album() {
         </div>
       </main>
       {/* Footer */}
-      <footer className={classes.footer}>
-        <Typography variant="h6" align="center" gutterBottom>
-          Footer
-        </Typography>
+      <footer className={classes.footer} >
         <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
           Very Important Info Down Here
         </Typography>

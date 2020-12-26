@@ -27,4 +27,4 @@ src/secrets.json
 src/curResponse.json
 src/potResponse.json
 src/client_secret.json
-src/backend/node_modules/
+backend/node_modules/
