@@ -26,7 +26,7 @@ router.get('/potBooks', async (req, res) => {
 })
 
 // Creates a post and adds to DB
-router.post('/', async (req, res) => {
+router.post('/addBook', async (req, res) => {
     // Create Post from model
     const post = new Post({
         title: req.body.title,
@@ -51,9 +51,9 @@ router.post('/', async (req, res) => {
 })
 
 // Get a specific post
-router.post('/:postId', async (req, res) => {
+router.get('/createBook/:bookID', async (req, res) => {
     try {
-        const post = await Post.findById(req.params.postId)
+        const post = await Post.findById(req.params.bookID)
         res.json(post)
     }
     catch(err) {
@@ -62,21 +62,21 @@ router.post('/:postId', async (req, res) => {
 })
 
 // Delete a specific post
-router.delete(':/postId', async (req, res) => {
+router.get('/deleteBook/:bookID', async (req, res) => {
     try {
-        const removedPost = await Post.remove({ _id: req.params.postId })
+        const removedPost = await Post.deleteOne({ _id: req.params.bookID })
         res.json(removedPost)
     }
-    catch(err) {
+    catch(err) {s
         res.json({message: err})
     }
 })
 
 // Update a specific post
-router.patch(':/postId', async (req, res) => {
+router.post('/updateBook/:bookID', async (req, res) => {
     try {
         const updatedPost = await Post.updateOne(
-            { _id: req.params.postId },
+            { _id: req.params.bookID },
             { $set: { title: req.body.title } }
         )
         res.json(updatedPost)

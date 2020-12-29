@@ -63,8 +63,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-
+// Removes a book from the DB
+function removeBook(bookID) {
+  axios
+  .get("/posts/deleteBook/" + bookID)
+  .then(res => {
+    console.log("Object Succesfully Deleted")
+    console.log("Results:\n" + res)
+  })
+  .catch(err => {
+    console.log(err)
+  })
+}
 
 export default function Album() {
   const classes = useStyles();
@@ -151,7 +161,7 @@ export default function Album() {
                         <Button size="small" color="primary" target="_blank" href={book.infoLink}>
                          Details
                         </Button>
-                        <Button size="small" color="primary" target="_blank" href={book.infoLink}>
+                        <Button size="small" color="primary" target="_blank" onClick={() => removeBook(book._id)}>
                          Remove
                         </Button>
                     </CardActions>
@@ -190,7 +200,7 @@ export default function Album() {
                         <Button size="small" color="primary" href={book.infoLink}>
                         Details
                         </Button>
-                        <Button size="small" color="primary" href={book.infoLink}>
+                        <Button size="small" color="primary" onClick={() => removeBook(book._id)}>
                         Remove
                         </Button>
                     </CardActions>
