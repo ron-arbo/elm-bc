@@ -15,8 +15,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import axios from 'axios';
-let secrets = require('./secrets.json')
-let clientSecrets = require('./client_secret.json')
 
 function Copyright() {
   return (

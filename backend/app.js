@@ -1,6 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const secrets = require('../src/secrets.json')
+const secrets = require('../frontend/secrets.json')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const app = express()

@@ -1,7 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+frontend/node_modules
 /.pnp
 .pnp.js
 
@@ -23,8 +23,5 @@ yarn-debug.log*
 yarn-error.log*
 
 # Secrets/Mine
-src/secrets.json
-src/curResponse.json
-src/potResponse.json
-src/client_secret.json
-backend/node_modules/
+frontend/secrets.json
+backend/node_modules
