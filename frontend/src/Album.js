@@ -74,6 +74,20 @@ function removeBook(bookID) {
   })
 }
 
+// Fills in completed/potential books array
+function fillCompArr(funcToFill) {
+  // Make request to get comp books, use function to fill array
+  axios.get("/posts/compBooks").then(res => {
+    funcToFill(res.data)
+  })
+}
+function fillPotArr(funcToFill) {
+  // Make request to get pot books, use function to fill array
+  axios.get("/posts/potBooks").then(res => {
+    funcToFill(res.data)
+  })
+}
+
 export default function Album() {
   const classes = useStyles();
   const [showComp, showCompReads] = useState(false)
@@ -81,15 +95,16 @@ export default function Album() {
   const [compCards, setCompCards] = useState([]);
   const [potCards, setPotCards] = useState([]);
 
-  // **NOTE** I think these are not done right. The requests work, but they may be occuring repeatedly rather than just once
-  // Make DB query to get data (Only functioning for comprent as of now)
-  axios.get("/posts/compBooks").then(res => {
-    setCompCards(res.data)
-  })
-  axios.get("/posts/potBooks").then(res => {
-    setPotCards(res.data)
-  })
-
+  // Define onClick function for completed and potential reads
+  // Function will change boolean var to display books and fill respective book array
+  function compOnClick(){
+    showCompReads(!showComp)
+    fillCompArr(setCompCards)
+  }
+  function potOnClick(){
+    showPotReads(!showPot)
+    fillPotArr(setPotCards)
+  }
 
   return (
     <React.Fragment>
@@ -115,12 +130,12 @@ export default function Album() {
             <div className={classes.heroButtons}>
               <Grid container spacing={2} justify="center">
                 <Grid item>
-                  <Button variant="contained" color="primary" onClick={() => showCompReads(!showComp)}>
+                  <Button variant="contained" color="primary" onClick={() => compOnClick()}>
                     Completed Reads
                   </Button>
                 </Grid>
                 <Grid item>
-                  <Button variant="outlined" color="primary" onClick={() => showPotReads(!showPot)}>
+                  <Button variant="outlined" color="primary" onClick={() => potOnClick()}>
                     Potential Reads
                   </Button>
                 </Grid>
