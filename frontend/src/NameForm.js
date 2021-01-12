@@ -1,5 +1,7 @@
 import React from 'react';
 import axios from 'axios';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
 class NameForm extends React.Component {
     constructor(props) {
@@ -40,14 +42,15 @@ class NameForm extends React.Component {
   
     render() {
       return (
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Add Book to List:  
-            <input placeholder="Title" type="text" value={this.state.value} onChange={this.handleChange} />
-          </label>
-          <input type="submit" value="Submit" />
-        </form>
-      );
+        <Form onSubmit={this.handleSubmit}>
+        <Form.Group controlId="formBookTitle">
+          <Form.Label>Add a Book:</Form.Label>
+          <Form.Control type="text" value={this.state.value} onChange={this.handleChange} placeholder="Title" />
+        </Form.Group>
+      
+        <Button value="Submit" type="submit" variant="dark">Add</Button>{' '} 
+      </Form>   
+       );
     }
   }
 

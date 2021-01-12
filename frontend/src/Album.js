@@ -148,7 +148,6 @@ export default function Album() {
         <div id="books">
             {showComp ? <Container className={classes.cardGrid} maxWidth="md">
             {/* End hero unit */}
-            <NameForm />
             <h2><u>Completed Reads:</u></h2>
             <h4>Total Books: {compCards.length}  |  Total Pages: {compCards.reduce((total, current) => total = total + current.pageCount, 0)}</h4>
             <Grid container spacing={4}>
@@ -189,6 +188,7 @@ export default function Album() {
             }
             {showPot ? <Container className={classes.cardGrid} maxWidth="md">
             {/* End hero unit */}
+            <NameForm />
             <h2><u>Potential Reads:</u></h2>
             <h4>Total Books: {potCards.length}  |  Total Pages: {potCards.reduce((total, current) => total = total + current.pageCount, 0)}</h4>
             <Grid container spacing={4}>
