@@ -36,7 +36,7 @@ class NameForm extends React.Component {
             thumbnail: firstVolume.volumeInfo.imageLinks.thumbnail,
         }); 
       })
-      alert('Book Succesfully Added!')
+      alert("Operation Successful")
       event.preventDefault();
     }
   

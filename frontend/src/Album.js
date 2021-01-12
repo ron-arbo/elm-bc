@@ -73,6 +73,23 @@ function removeBook(bookID) {
   .catch(err => {
     console.log(err)
   })
+  alert("Operation Successful")
+  window.location.reload()
+}
+
+// Changes a books type from potential to completed
+function changeType(bookID) {
+  axios
+  .get("/posts/changeType/" + bookID)
+  .then(res => {
+    console.log("Object updated successfully")
+    console.log("Results:\n" + res)
+  })
+  .catch(err => {
+    console.log(err)
+  })
+  alert("Operation Successful")
+  window.location.reload()
 }
 
 // Fills in completed/potential books array
@@ -217,6 +234,9 @@ export default function Album() {
                         </Button>
                         <Button size="small" color="primary" onClick={() => removeBook(book._id)}>
                         Remove
+                        </Button>
+                        <Button size="small" color="primary" onClick={() => changeType(book._id)}>
+                        Completed
                         </Button>
                     </CardActions>
                     </Card>
